@@ -60,6 +60,7 @@
                     android:id="@+id/btn_add_to_favorites"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onAddToFavClicked"
                     android:layout_marginTop="16dp"
                     android:drawableTop="@drawable/ic_favorite_border_black_24dp"
                     android:text="Add to favorites" />
@@ -100,10 +101,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:onClick="onTrailersViewClicked"
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/tv_trailers_button"
+                android:id="@+id/tv_trailers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
@@ -115,11 +117,12 @@
             android:id="@+id/ll_reviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onReviewsViewClicked"
             android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/tv_reviews_button"
+                android:id="@+id/tv_reviews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"

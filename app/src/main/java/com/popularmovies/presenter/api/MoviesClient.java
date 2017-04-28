@@ -2,6 +2,8 @@ package com.popularmovies.presenter.api;
 
 import com.popularmovies.BuildConfig;
 import com.popularmovies.model.MovieDetailModel;
+import com.popularmovies.model.MovieReviewsModel;
+import com.popularmovies.model.MovieTrailersModel;
 import com.popularmovies.model.MoviesModel;
 
 import retrofit2.Call;
@@ -35,10 +37,10 @@ public class MoviesClient {
     public Call<MovieDetailModel> getCallMovie(int movieId) {
         return client.movie(movieId, BuildConfig.MOVIE_API_KEY);
     }
-    public Call<MovieDetailModel> getCallMovieTrailers(int movieId) {
+    public Call<MovieTrailersModel> getCallMovieTrailers(int movieId) {
         return client.movieTrailers(movieId, BuildConfig.MOVIE_API_KEY);
     }
-    public Call<MovieDetailModel> getCallMovieVideos(int movieId) {
+    public Call<MovieReviewsModel> getCallMovieReviews(int movieId) {
         return client.movieReviews(movieId, BuildConfig.MOVIE_API_KEY);
     }
 
@@ -52,10 +54,10 @@ public class MoviesClient {
         @GET("movie/{movieId}")
         Call<MovieDetailModel> movie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
 
-        @GET("movie/videos/{movieId}")
-        Call<MovieDetailModel> movieTrailers(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+        @GET("movie/{movieId}/videos")
+        Call<MovieTrailersModel> movieTrailers(@Path("movieId") int movieId, @Query("api_key") String apiKey);
 
-        @GET("movie/reviews/{movieId}")
-        Call<MovieDetailModel> movieReviews(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+        @GET("movie/{movieId}/reviews")
+        Call<MovieReviewsModel> movieReviews(@Path("movieId") int movieId, @Query("api_key") String apiKey);
     }
 }

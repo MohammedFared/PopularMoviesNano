@@ -5,4 +5,6 @@ package com.popularmovies.presenter;
  */
 
 public interface IMovieDetailsPresenter {
+    void getTrailers(int movieId);
+    void getReviews(int movieId);
 }
