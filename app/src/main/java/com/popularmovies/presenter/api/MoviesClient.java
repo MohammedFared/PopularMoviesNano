@@ -15,7 +15,6 @@ import retrofit2.http.Query;
  * PopularMovies Created by Mohammed Fareed on 4/7/2017.
  */
 public class MoviesClient {
-
     private Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl("http://api.themoviedb.org/3/")
             .addConverterFactory(GsonConverterFactory.create());
@@ -34,11 +33,16 @@ public class MoviesClient {
         return callTopRated;
     }
     public Call<MovieDetailModel> getCallMovie(int movieId) {
-        Call<MovieDetailModel> callMovie = client.movie(movieId, BuildConfig.MOVIE_API_KEY);
-        return callMovie;
+        return client.movie(movieId, BuildConfig.MOVIE_API_KEY);
+    }
+    public Call<MovieDetailModel> getCallMovieTrailers(int movieId) {
+        return client.movieTrailers(movieId, BuildConfig.MOVIE_API_KEY);
+    }
+    public Call<MovieDetailModel> getCallMovieVideos(int movieId) {
+        return client.movieReviews(movieId, BuildConfig.MOVIE_API_KEY);
     }
 
-    public interface MoviesClientInterface {
+    private interface MoviesClientInterface {
         @GET("movie/popular")
         Call<MoviesModel> popularMovies(@Query("api_key") String apiKey);
 
@@ -47,5 +51,11 @@ public class MoviesClient {
 
         @GET("movie/{movieId}")
         Call<MovieDetailModel> movie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+
+        @GET("movie/videos/{movieId}")
+        Call<MovieDetailModel> movieTrailers(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+
+        @GET("movie/reviews/{movieId}")
+        Call<MovieDetailModel> movieReviews(@Path("movieId") int movieId, @Query("api_key") String apiKey);
     }
 }
