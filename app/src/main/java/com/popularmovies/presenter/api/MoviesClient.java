@@ -44,12 +44,19 @@ public class MoviesClient {
         return client.movieReviews(movieId, BuildConfig.MOVIE_API_KEY);
     }
 
+    public Call<MoviesModel> getCallMoviesPage(String sort, int page) {
+        return client.moviesPageAndSort(sort, page, BuildConfig.MOVIE_API_KEY);
+    }
+
     private interface MoviesClientInterface {
         @GET("movie/popular")
         Call<MoviesModel> popularMovies(@Query("api_key") String apiKey);
 
         @GET("movie/top_rated")
         Call<MoviesModel> topRatedMovies(@Query("api_key") String apiKey);
+
+        @GET("movie/{sort}")
+        Call<MoviesModel> moviesPageAndSort(@Path("sort") String sort, @Query("page") int page,@Query("api_key") String apiKey);
 
         @GET("movie/{movieId}")
         Call<MovieDetailModel> movie(@Path("movieId") int movieId, @Query("api_key") String apiKey);

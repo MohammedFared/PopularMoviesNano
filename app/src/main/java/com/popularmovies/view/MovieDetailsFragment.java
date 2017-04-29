@@ -153,7 +153,7 @@ public class MovieDetailsFragment extends Fragment implements IMovieDetailsView 
             trailersLinearLayout.addView(btn);
         }
     }
-
+    // add the reviews to the linearLayout
     @Override
     public void reviewsResponse(ArrayList<String> authors, ArrayList<String> contents) {
         final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

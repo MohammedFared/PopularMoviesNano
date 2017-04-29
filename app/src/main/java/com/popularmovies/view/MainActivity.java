@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
             @Override
             public void onReceive(Context context, Intent intent) {
                 boolean isNetworkAvailable = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false);
-                Log.d(TAG, "onReceive: " + isNetworkAvailable);
+//                Log.d(TAG, "onReceive: " + isNetworkAvailable);
                 if (isNetworkAvailable){
                     showFragment();
                 } else {

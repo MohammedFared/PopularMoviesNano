@@ -12,6 +12,8 @@ import com.popularmovies.model.MoviesModel;
 import com.popularmovies.view.IMoviesAdapterView;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
  * PopularMovies Created by Mohammed Fareed on 4/28/2017.
  */
@@ -28,17 +30,19 @@ public class MoviesViewHolder extends RecyclerView.ViewHolder {
         ratingMovieView = (RatingBar) itemView.findViewById(R.id.rb_movie_rating);
     }
 
-    public void bind(MoviesModel mMovieModel, final IMoviesAdapterView mListener) {
+    public void bind(List<MoviesModel.ResultsBean> mMovieModel, final IMoviesAdapterView mListener) {
 
         if (mMovieModel != null) {
-            final MoviesModel.ResultsBean movie = mMovieModel.getResults().get(getAdapterPosition());
+            final MoviesModel.ResultsBean movie = mMovieModel.get(getAdapterPosition());
             String movieName = movie.getTitle();
             double rate = movie.getVote_average();
             String poster = movie.getPoster_path();
 
             nameMovieView.setText(movieName);
             Picasso.with(itemView.getContext())
-                    .load(Utils.IMAGEURLBASE + poster).into(posterImageView);
+                    .load(Utils.IMAGEURLBASE + poster)
+                    .placeholder(itemView.getContext().getResources().getDrawable(R.drawable.tmp))
+                    .into(posterImageView);
             ratingMovieView.setNumStars(5);
             ratingMovieView.setMax(5);
             ratingMovieView.setRating((float) rate / 2);

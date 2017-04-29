@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.popularmovies.R;
+import com.popularmovies.presenter.IMovies;
 import com.popularmovies.presenter.adapters.MoviesAdapter;
 
 
@@ -31,8 +32,11 @@ import com.popularmovies.presenter.adapters.MoviesAdapter;
 public class MainFragment extends Fragment implements IMoviesAdapterView {
     private OnFragmentInteractionListener mListener;
 
+    private boolean loading = true;
+    private int pageNumber = 1;
     private RecyclerView mMovieRecyclerView;
     private TextView mFilterTextView;
+    private IMovies mIMovies;
 
     private MoviesAdapter mMoviesAdapter;
 
@@ -40,10 +44,11 @@ public class MainFragment extends Fragment implements IMoviesAdapterView {
 
     private static String TAG = "MainFragmentLOG";
 
-    public static String POPULAR = "Popular";
-    public static String TOPRATED = "Top rated";
+    public static String POPULAR = "popular";
+    public static String TOPRATED = "top_rated";
 
     private String currentFilter = POPULAR;
+    private GridLayoutManager mGridLayoutManager;
 
     public MainFragment() {
         // Required empty public constructor
@@ -61,7 +66,9 @@ public class MainFragment extends Fragment implements IMoviesAdapterView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mMoviesAdapter = new MoviesAdapter(getContext(), currentFilter, this);
+        mMoviesAdapter = new MoviesAdapter(getContext(), this);
+        mIMovies = mMoviesAdapter;
+        mIMovies.retrieveData(currentFilter);
     }
 
     @Override
@@ -82,17 +89,45 @@ public class MainFragment extends Fragment implements IMoviesAdapterView {
         super.onActivityCreated(savedInstanceState);
         mFilterTextView.setText(currentFilter);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
 
-        mMovieRecyclerView.setLayoutManager(gridLayoutManager);
+        mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieRecyclerView.setHasFixedSize(true);
         mMovieRecyclerView.setAdapter(mMoviesAdapter);
+
+        setOnScrollListener();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mMoviesAdapter = new MoviesAdapter(getContext(), currentFilter, MainFragment.this);
-                mMovieRecyclerView.setAdapter(mMoviesAdapter);
+                mIMovies.retrieveData(currentFilter);
+            }
+        });
+    }
+
+    private void setOnScrollListener() {
+        mMovieRecyclerView.clearOnScrollListeners();
+        mMovieRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0) //check for scroll down
+                {
+                    int visibleItemCount = mGridLayoutManager.getChildCount();
+                    int totalItemCount = mGridLayoutManager.getItemCount();
+                    int pastVisiblesItems = mGridLayoutManager.findFirstVisibleItemPosition();
+
+//                    if (loading)
+//                    {
+                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount && !mSwipeRefreshLayout.isRefreshing())
+                        {
+                            loading = false;
+                            Log.v("...", "Last Item Wow !");
+
+                            mIMovies.loadMoreMoviesOnScroll(++pageNumber, currentFilter);
+                            mFilterTextView.append(" " + String.valueOf(pageNumber));
+                        }
+//                    }
+                }
             }
         });
     }
@@ -122,8 +157,9 @@ public class MainFragment extends Fragment implements IMoviesAdapterView {
             currentFilter = POPULAR;
             mFilterTextView.setText(POPULAR);
         }
-        mMoviesAdapter = new MoviesAdapter(getContext(), currentFilter, this);
-        mMovieRecyclerView.setAdapter(mMoviesAdapter);
+        pageNumber = 1;
+        mIMovies.retrieveData(currentFilter);
+        setOnScrollListener();
     }
 
     public static void isRefreshing(boolean bool){
